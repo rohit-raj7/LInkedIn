@@ -1,5 +1,32 @@
  
 
+// import express from 'express';
+// import dotenv from 'dotenv';
+// import connectDB from './config/db.js';
+// import cors from 'cors';
+
+// import authRoutes from './routes/authRoutes.js';
+// import postRoutes from './routes/postRoutes.js';
+// import userRoutes from './routes/userRoutes.js';
+
+// dotenv.config();
+// connectDB();
+   
+
+// const app = express();
+// app.use(cors());
+// app.use(express.json());
+
+// app.use('/api/auth', authRoutes);
+// app.use('/api/posts', postRoutes);
+// app.use('/api/users', userRoutes);
+
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+
+
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
@@ -13,7 +40,27 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors());
+
+const allowedOrigins = [
+  'https://learningnow.online',
+  'http://localhost:5173',
+  'https://online-learning-yet.netlify.app',
+  'https://online-learning-yet.vercel.app',
+  'https://online-learning-rohit.netlify.app',
+];
+
+// CORS middleware
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
