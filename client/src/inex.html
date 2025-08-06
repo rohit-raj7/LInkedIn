@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectHub - Professional Community Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #0077b5 0%, #00a0dc 100%);
+        }
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 119, 181, 0.1);
+        }
+        .profile-banner {
+            height: 200px;
+            background: linear-gradient(90deg, #0077b5 0%, #005f8c 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <img class="h-8 w-auto" src="https://placehold.co/160x80?text=ConnectHub" alt="ConnectHub logo with professional blue gradient">
+                    </div>
+                </div>
+                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-4">
+                    <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Feed</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Network</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Jobs</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Messages</a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="auth-btn" class="px-4 py-2 rounded-full text-sm font-medium gradient-bg text-white hover:bg-blue-700 transition-colors">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="flex justify-between items-center border-b px-6 py-4">
+                <h3 class="text-lg font-semibold text-gray-900">Welcome to ConnectHub</h3>
+                <button id="close-auth-modal" class="text-gray-500 hover:text-gray-700">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="auth-tabs" class="flex border-b">
+                <button id="login-tab" class="flex-1 py-3 px-4 text-center font-medium text-blue-600 border-b-2 border-blue-600">Sign In</button>
+                <button id="register-tab" class="flex-1 py-3 px-4 text-center font-medium text-gray-500 hover:text-gray-700">Sign Up</button>
+            </div>
+            
+            <div id="login-form" class="p-6">
+                <form>
+                    <div class="mb-4">
+                        <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="login-email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="your@email.com">
+                    </div>
+                    <div class="mb-4">
+                        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="login-password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••">
+                    </div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <input id="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="remember-me" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                        </div>
+                        <a href="#" class="text-sm text-blue-600 hover:text-blue-500">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="w-full gradient-bg text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">Sign In</button>
+                </form>
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-500">Not a member? <button id="show-register" class="text-blue-600 hover:text-blue-500 font-medium">Register now</button></p>
+                </div>
+            </div>
+            
+            <div id="register-form" class="hidden p-6">
+                <form>
+                    <div class="mb-4">
+                        <label for="register-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <input type="text" id="register-name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="John Doe">
+                    </div>
+                    <div class="mb-4">
+                        <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="register-email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="your@email.com">
+                    </div>
+                    <div class="mb-4">
+                        <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="register-password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••">
+                    </div>
+                    <div class="mb-4">
+                        <label for="register-bio" class="block text-sm font-medium text-gray-700 mb-1">Professional Bio</label>
+                        <textarea id="register-bio" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Describe your professional experience..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full gradient-bg text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">Sign Up</button>
+                </form>
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-500">Already have an account? <button id="show-login" class="text-blue-600 hover:text-blue-500 font-medium">Sign in</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Left Column (Profile Card) -->
+            <div class="w-full md:w-1/3 lg:w-1/4">
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="profile-banner"></div>
+                    <div class="px-4 pb-6 relative -mt-12">
+                        <div class="flex justify-center">
+                            <img class="h-24 w-24 rounded-full border-4 border-white" src="https://placehold.co/400x400" alt="Professional headshot of user smiling">
+                        </div>
+                        <div class="text-center mt-4">
+                            <h2 class="text-lg font-semibold text-gray-900" id="profile-name">Sarah Johnson</h2>
+                            <p class="text-sm text-gray-500" id="profile-title">Senior UX Designer at TechCorp</p>
+                        </div>
+                        <div class="mt-4 text-sm text-gray-700" id="profile-bio">
+                            Experienced UX designer passionate about creating intuitive digital experiences. Previously at DesignWorks Inc.
+                        </div>
+                        <div class="mt-4 border-t border-gray-200 pt-4">
+                            <h3 class="text-sm font-medium text-gray-500">Connections</h3>
+                            <p class="text-sm font-semibold text-blue-600 mt-1">500+ connections</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow mt-4 p-4">
+                    <h3 class="text-sm font-medium text-gray-900 mb-2">Suggestions for You</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <img class="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt="Project manager profile picture">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">Michael Brown</p>
+                                <p class="text-sm text-gray-500 truncate">Project Manager at BuildRight</p>
+                            </div>
+                            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Connect</button>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <img class="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt="Software developer profile picture">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">Alex Chen</p>
+                                <p class="text-sm text-gray-500 truncate">Software Developer at CodeForge</p>
+                            </div>
+                            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Connect</button>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <img class="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt="Marketing specialist profile picture">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">Emily Rodriguez</p>
+                                <p class="text-sm text-gray-500 truncate">Marketing Specialist at BrandWorks</p>
+                            </div>
+                            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Connect</button>
+                        </div>
+                    </div>
+                    <button class="w-full mt-4 text-sm text-gray-500 hover:text-gray-700 font-medium">See all</button>
+                </div>
+            </div>
+
+            <!-- Middle Column (Feed) -->
+            <div class="w-full md:w-2/3 lg:w-1/2">
+                <!-- Create Post -->
+                <div class="bg-white rounded-lg shadow p-4 mb-4">
+                    <div class="flex items-start gap-3">
+                        <img class="h-12 w-12 rounded-full" src="https://placehold.co/400x400" alt="User profile picture">
+                        <div class="flex-1">
+                            <textarea id="new-post" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3" placeholder="Share your professional insights..."></textarea>
+                            <div class="flex justify-between items-center mt-3">
+                                <div class="flex gap-2">
+                                    <button class="text-gray-500 hover:text-blue-600 p-2 rounded-full hover:bg-gray-100">
+                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <button id="post-submit" class="px-4 py-2 rounded-full text-sm font-medium gradient-bg text-white hover:bg-blue-700 transition-colors">
+                                    Post
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feed Posts -->
+                <div id="posts-container">
+                    <!-- Post 1 -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden mb-4 post-card transition-transform duration-200">
+                        <div class="p-4">
+                            <div class="flex items-center gap-3 mb-3">
+                                <img class="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt="Emma Wilson profile picture">
+                                <div>
+                                    <h4 class="text-sm font-semibold text-gray-900">Emma Wilson</h4>
+                                    <p class="text-xs text-gray-500">Product Manager • 2h ago</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-800 mb-3">
+                                Just launched our new product feature after months of collaboration between engineering, design, and marketing teams. So proud of what we've accomplished together! #ProductManagement #Teamwork
+                            </p>
+                            <div class="flex items-center gap-4 border-t border-gray-100 pt-3">
+                                <button class="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.981.183-1.334.514l-.917 1.12a2 2 0 01-1.483.697H8M7 13v3m0 0v3m0-3h3m-3 0H6" />
+                                    </svg>
+                                    <span class="text-sm">24</span>
+                                </button>
+                                <button class="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                    </svg>
+                                    <span class="text-sm">8 comments</span>
+                                </button>
+                                <button class="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                                    </svg>
+                                    <span class="text-sm">Share</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post 2 -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden mb-4 post-card transition-transform duration-200">
+                        <div class="p-4">
+                            <div class="flex items-center gap-3 mb-3">
+                                <img class="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt="David Kim profile picture">
+                                <div>
+                                    <h4 class="text-sm font-semibold text-gray-900">David Kim</h4>
+                                    <p class="text-xs text-gray-500">Tech Lead • Yesterday</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-800 mb-3">
+                                Interesting insights from today's engineering leadership conference about scaling distributed systems. Key takeaways:
+                                - Importance of observability
+                                - Effective team communication patterns
+                                - Balancing velocity with stability
+                                
+                                Would love to hear others' experiences!
+                            </p>
+                            <div class="flex items-center gap-4 border-t border-gray-100 pt-3">
+                                <button class="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.981.183-1.334.514l-.917 1.12a2 2 0 01-1.483.697H8M7 13v3m0 0v3m0-3h3m-3 0H6" />
+                                    </svg>
+                                    <span class="text-sm">42</span>
+                                </button>
+                                <button class="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                    </svg>
+                                    <span class="text-sm">15 comments</span>
+                                </button>
+                                <button class="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                                    </svg>
+                                    <span class="text-sm">Share</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column (News & Notifications) -->
+            <div class="hidden lg:block lg:w-1/4">
+                <div class="bg-white rounded-lg shadow p-4 mb-4">
+                    <h3 class="text-sm font-medium text-gray-900 mb-3">Network Highlights</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <img class="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt="Network event announcement">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Weekly Tech Meetup</p>
+                                <p class="text-xs text-gray-500">Tomorrow at 6:00 PM</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <img class="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt="New job posting">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">New job openings in your network</p>
+                                <p class="text-xs text-gray-500">3 new postings</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <img class="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt="Industry report">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">2023 Industry Report</p>
+                                <p class="text-xs text-gray-500">Download now</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h3 class="text-sm font-medium text-gray-900 mb-3">Recently Viewed Profiles</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <img class="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt="Recent profile view">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Lisa Thompson</p>
+                                <p class="text-xs text-gray-500">HR Manager</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <img class="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt="Recent profile view">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Robert Chen</p>
+                                <p class="text-xs text-gray-500">Senior Developer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Profile Page (Hidden by default) -->
+    <div id="profile-page" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col">
+            <div class="profile-banner rounded-t-lg"></div>
+            <div class="bg-white rounded-b-lg shadow overflow-hidden">
+                <div class="px-6 pb-6 relative -mt-16">
+                    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between">
+                        <div class="flex items-center gap-4">
+                            <img class="h-32 w-32 rounded-full border-4 border-white" src="https://placehold.co/400x400" alt="Professional headshot of profile user">
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-900">Sarah Johnson</h1>
+                                <p class="text-lg text-gray-600">Senior UX Designer at TechCorp</p>
+                                <p class="text-sm text-gray-500">San Francisco Bay Area • 500+ connections</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 sm:mt-0 flex gap-3">
+                            <button class="px-4 py-2 rounded-full text-sm font-medium gradient-bg text-white hover:bg-blue-700 transition-colors">
+                                Connect
+                            </button>
+                            <button class="px-4 py-2 rounded-full text-sm font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                                Message
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <h2 class="text-lg font-semibold text-gray-900">About</h2>
+                        <p class="mt-2 text-gray-700" id="profile-about">
+                            Experienced UX designer with 7+ years in creating intuitive digital experiences. Passionate about user-centered design and accessibility. Currently leading design initiatives at TechCorp to improve product usability and customer satisfaction. Previously worked at DesignWorks Inc. where I led a team of designers to revamp their flagship product's interface.
+                            <br><br>
+                            Skills: User Research, Wireframing, Prototyping, UI Design, Design Systems
+                        </p>
+                    </div>
+
+                    <div class="mt-6 border-t border-gray-200 pt-6">
+                        <h2 class="text-lg font-semibold text-gray-900">Experience</h2>
+                        <div class="mt-4 space-y-4">
+                            <div class="flex gap-4">
+                                <img class="h-12 w-12 rounded-full" src="https://placehold.co/400x400" alt="TechCorp company logo">
+                                <div>
+                                    <h3 class="font-medium text-gray-900">Senior UX Designer</h3>
+                                    <p class="text-sm text-gray-600">TechCorp</p>
+                                    <p class="text-xs text-gray-500">Jun 2019 - Present • 4 yrs 2 mos</p>
+                                    <p class="mt-1 text-sm text-gray-700">Leading design efforts for the company's main product suite, working closely with engineering and product teams to implement user-friendly interfaces.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <img class="h-12 w-12 rounded-full" src="https://placehold.co/400x400" alt="DesignWorks company logo">
+                                <div>
+                                    <h3 class="font-medium text-gray-900">UX Designer</h3>
+                                    <p class="text-sm text-gray-600">DesignWorks Inc.</p>
+                                    <p class="text-xs text-gray-500">Mar 2016 - May 2019 • 3 yrs 3 mos</p>
+                                    <p class="mt-1 text-sm text-gray-700">Contributed to multiple client projects, specializing in creating wireframes, prototypes, and final UI designs for web and mobile applications.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 border-t border-gray-200 pt-6">
+                        <h2 class="text-lg font-semibold text-gray-900">Education</h2>
+                        <div class="mt-4 flex gap-4">
+                            <img class="h-12 w-12 rounded-full" src="https://placehold.co/400x400" alt="University logo">
+                            <div>
+                                <h3 class="font-medium text-gray-900">San Francisco State University</h3>
+                                <p class="text-sm text-gray-600">Bachelor's degree, Design and Visual Communications</p>
+                                <p class="text-xs text-gray-500">2012 - 2016</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 border-t border-gray-200 pt-6">
+                        <h2 class="text-lg font-semibold text-gray-900">Sarah's Posts</h2>
+                        <div id="user-posts-container" class="mt-4 space-y-4">
+                            <!-- User's posts will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <script>
+        // Authentication state
+        let currentUser = null;
+        let isAuthenticated = false;
+
+        // DOM Elements
+        const authBtn = document.getElementById('auth-btn');
+        const authModal = document.getElementById('auth-modal');
+        const closeAuthModal = document.getElementById('close-auth-modal');
+        const loginTab = document.getElementById('login-tab');
+        const registerTab = document.getElementById('register-tab');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const showRegister = document.getElementById('show-register');
+        const showLogin = document.getElementById('show-login');
+        const postSubmit = document.getElementById('post-submit');
+        const newPost = document.getElementById('new-post');
+        const postsContainer = document.getElementById('posts-container');
+        const profilePage = document.getElementById('profile-page');
+        const userPostsContainer = document.getElementById('user-posts-container');
+        
+        // Mock data
+        const users = [
+            { id: 1, name: 'Sarah Johnson', email: 'sarah@example.com', password: 'password123', 
+              bio: 'Experienced UX designer with 7+ years in creating intuitive digital experiences', 
+              title: 'Senior UX Designer at TechCorp' }
+        ];
+        
+        const posts = [
+            { id: 1, userId: 1, author: 'Emma Wilson', content: 'Just launched our new product feature after months of collaboration between engineering, design, and marketing teams. So proud of what we\'ve accomplished together! #ProductManagement #Teamwork', time: '2h ago' },
+            { id: 2, userId: 2, author: 'David Kim', content: 'Interesting insights from today\'s engineering leadership conference about scaling distributed systems. Key takeaways:\n- Importance of observability\n- Effective team communication patterns\n- Balancing velocity with stability\n\nWould love to hear others\' experiences!', time: 'Yesterday' }
+        ];
+
+        // Event Listeners
+        authBtn.addEventListener('click', toggleAuthModal);
+        closeAuthModal.addEventListener('click', toggleAuthModal);
+        loginTab.addEventListener('click', () => switchAuthTab('login'));
+        registerTab.addEventListener('click', () => switchAuthTab('register'));
+        showRegister.addEventListener('click', () => switchAuthTab('register'));
+        showLogin.addEventListener('click', () => switchAuthTab('login'));
+        postSubmit.addEventListener('click', createPost);
+
+        // Toggle auth modal
+        function toggleAuthModal() {
+            authModal.classList.toggle('hidden');
+        }
+
+        // Switch between login/register tabs
+        function switchAuthTab(tab) {
+            if (tab === 'login') {
+                loginTab.classList.add('text-blue-600', 'border-blue-600');
+                loginTab.classList.remove('text-gray-500');
+                registerTab.classList.remove('text-blue-600', 'border-blue-600');
+                registerTab.classList.add('text-gray-500');
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } else {
+                registerTab.classList.add('text-blue-600', 'border-blue-600');
+                registerTab.classList.remove('text-gray-500');
+                loginTab.classList.remove('text-blue-600', 'border-blue-600');
+                loginTab.classList.add('text-gray-500');
+                registerForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+            }
+        }
+
+        // Handle login
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            if (user) {
+                currentUser = user;
+                isAuthenticated = true;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                authModal.classList.add('hidden');
+                authBtn.textContent = user.name.split(' ')[0];
+                updateProfileInfo();
+                alert('Login successful!');
+            } else {
+                alert('Invalid email or password');
+            }
+        });
+
+        // Handle registration
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const bio = document.getElementById('register-bio').value;
+            
+            const newUser = {
+                id: users.length + 1,
+                name,
+                email,
+                password,
+                bio,
+                title: 'Professional at ConnectHub'
+            };
+            
+            users.push(newUser);
+            currentUser = newUser;
+            isAuthenticated = true;
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            authModal.classList.add('hidden');
+            authBtn.textContent = newUser.name.split(' ')[0];
+            updateProfileInfo();
+            alert('Registration successful!');
+        });
+
+        // Create new post
+        function createPost() {
+            const content = newPost.value.trim();
+            if (!isAuthenticated) {
+                alert('Please sign in to post');
+                toggleAuthModal();
+                return;
+            }
+            
+            if (content) {
+                const newPostObj = {
+                    id: posts.length + 1,
+                    userId: currentUser.id,
+                    author: currentUser.name,
+                    content,
+                    time: 'Just now'
+                };
+                
+                posts.unshift(newPostObj);
+                renderPost(newPostObj);
+                newPost.value = '';
+                
+                // Also add to profile page if viewing
+                if (userPostsContainer) {
+                    renderUserPost(newPostObj);
+                }
+            }
+        }
+
+        // Render post in main feed
+        function renderPost(post) {
+            const postElement = document.createElement('div');
+            postElement.className = 'bg-white rounded-lg shadow overflow-hidden mb-4 post-card transition-transform duration-200';
+            postElement.innerHTML = `
+                <div class="p-4">
+                    <div class="flex items-center gap-3 mb-3">
+                        <img class="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt="${post.author} profile picture">
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-900">${post.author}</h4>
+                            <p class="text-xs text-gray-500">${post.time}</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-800 mb-3">${post.content.replace(/\n/g, '<br>')}</p>
+                    <div class="flex items-center gap-4 border-t border-gray-100 pt-3">
+                        <button class="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.981.183-1.334.514l-.917 1.12a2 2 0 01-1.483.697H8M7 13v3m0 0v3m0-3h3m-3 0H6" />
+                            </svg>
+                            <span class="text-sm">Like</span>
+                        </button>
+                        <button class="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            <span class="text-sm">Comment</span>
+                        </button>
+                        <button class="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                            </svg>
+                            <span class="text-sm">Share</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            postsContainer.prepend(postElement);
+        }
+
+        // Render post in user profile
+        function renderUserPost(post) {
+            const postElement = document.createElement('div');
+            postElement.className = 'bg-white rounded-lg shadow overflow-hidden post-card transition-transform duration-200';
+            postElement.innerHTML = `
+                <div class="p-4">
+                    <div class="flex items-center gap-3 mb-3">
+                        <img class="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt="${post.author} profile picture">
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-900">${post.author}</h4>
+                            <p class="text-xs text-gray-500">${post.time}</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-800 mb-3">${post.content.replace(/\n/g, '<br>')}</p>
+                    <div class="flex items-center gap-4 border-t border-gray-100 pt-3">
+                        <button class="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.981.183-1.334.514l-.917 1.12a2 2 0 01-1.483.697H8M7 13v3m0 0v3m0-3h3m-3 0H6" />
+                            </svg>
+                            <span class="text-sm">12</span>
+                        </button>
+                        <button class="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            <span class="text-sm">3 comments</span>
+                        </button>
+                        <button class="flex items-center gap-1 text-gray-500 hover:text-blue-600">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                            </svg>
+                            <span class="text-sm">Share</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            userPostsContainer.prepend(postElement);
+        }
+
+        // Update profile information
+        function updateProfileInfo() {
+            if (currentUser) {
+                document.getElementById('profile-name').textContent = currentUser.name;
+                document.getElementById('profile-title').textContent = currentUser.title;
+                document.getElementById('profile-bio').textContent = currentUser.bio;
+                
+                if (document.getElementById('profile-about')) {
+                    document.getElementById('profile-about').textContent = currentUser.bio;
+                }
+            }
+        }
+
+        // Initialize the app
+        function init() {
+            // Check for logged in user
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                isAuthenticated = true;
+                authBtn.textContent = currentUser.name.split(' ')[0];
+                updateProfileInfo();
+            }
+
+            // Render existing posts
+            posts.forEach(post => {
+                renderPost(post);
+                
+                // If this is the current user's post, add to profile
+                if (currentUser && post.userId === currentUser.id && userPostsContainer) {
+                    renderUserPost(post);
+                }
+            });
+        }
+
+        // Profile navigation (mock - would normally be separate pages)
+        document.querySelectorAll('[data-profile]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelector('main').classList.add('hidden');
+                profilePage.classList.remove('hidden');
+                
+                // Clear existing user posts
+                if (userPostsContainer) {
+                    userPostsContainer.innerHTML = '';
+                }
+                
+                // Filter and render user's posts
+                const userPosts = posts.filter(post => post.userId === currentUser.id);
+                userPosts.forEach(post => renderUserPost(post));
+            });
+        });
+
+        // Go back to main feed from profile
+        document.getElementById('back-to-feed').addEventListener('click', () => {
+            profilePage.classList.add('hidden');
+            document.querySelector('main').classList.remove('hidden');
+        });
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
