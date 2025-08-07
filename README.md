@@ -34,12 +34,11 @@
 ### Extra Features
 
 - **Update** and **Delete** the posts.
+- Only the **author** of the post can **edit** or **delete** it.
 - User can **like** and **comment** on Other Post.
 - **Deletion** is secure and includes proper **authorization** checks.
 - Users can **update** the content in-place, similar to LinkedIn’s inline editing.
-- Profile Picture Upload
-- 🔄 Edit & Delete Posts
-- Only the **author** of the post can **edit** or **delete** it.
+- Profile Picture Upload .
 
 
 ---
