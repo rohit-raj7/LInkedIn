@@ -3,7 +3,7 @@ import {
   createPost,
   getPublicFeed,
   addComment,
-  getComments,
+  getComments,deletePost,updatePost,
   togglePostLike,getPostsByUser,
 } from '../controllers/postController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
@@ -18,7 +18,8 @@ router.get('/feed', getPublicFeed);
 router.post('/comment', authMiddleware, addComment);
 router.get('/comment/:postId', getComments);
 router.post('/like/:id', authMiddleware, togglePostLike);
-
+router.delete('/:id', authMiddleware, deletePost);
+router.put('/:id', authMiddleware, updatePost);
 router.get('/user/:userId', getPostsByUser);
 
 export default router;
