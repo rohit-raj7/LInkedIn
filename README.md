@@ -38,7 +38,7 @@
 | Backend   | Node.js, Express.js                 |
 | Database  | MongoDB + Mongoose                  |
 | Auth      | JWT, bcrypt.js                      |
-| Hosting   | Vercel (frontend), Render (backend) |
+| Hosting   | Vercel (frontend & backend)         |
 
 ---
 
