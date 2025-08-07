@@ -8,10 +8,11 @@ function FullProfileView() {
   const { userId } = useParams();
   const apiUrl = 'http://localhost:3001';
   const [profile, setProfile] = useState(null);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchProfileWithPosts = async () => {
       const token = localStorage.getItem('token');
 
       if (!userId) {
@@ -21,22 +22,28 @@ function FullProfileView() {
       }
 
       try {
-        const res = await axios.get(`${apiUrl}/api/profile/${userId}`, {
+        const res = await axios.get(`${apiUrl}/api/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        console.log('Fetched raw response:', res.data);
-        setProfile(res.data);
+        const { profile, posts } = res.data;
+
+        if (profile.userCustomId !== userId) {
+          console.warn("User ID in URL doesn't match token user.");
+        }
+
+        setProfile(profile);
+        setPosts(posts);
       } catch (err) {
-        console.error('Error fetching profile:', err.response?.data || err.message);
+        console.error('Error fetching profile with posts:', err.response?.data || err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProfile();
+    fetchProfileWithPosts();
   }, [userId]);
 
   if (loading) return <div className="text-center mt-10">Loading profile...</div>;
@@ -53,23 +60,27 @@ function FullProfileView() {
     education = []
   } = profile;
 
+  const profileImage = imageUrl && imageUrl.trim() !== "" ? imageUrl : "https://th.bing.com/th/id/OIP.PMhANanxddOBObcYxcYOcwHaGy?pid=ImgDet&w=400&h=400&rs=1";
+
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header */}
       <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 h-48 rounded-t-lg shadow">
         <div className="absolute left-6 bottom-[-48px] sm:bottom-[-56px]">
           <img
             className="h-24 w-24 sm:h-28 sm:w-28 rounded-full border-4 border-white shadow-lg object-cover"
-            src={imageUrl && imageUrl.trim() !== "" ? imageUrl : "https://thfvnext.bing.com/th/id/OIP.PMhANanxddOBObcYxcYOcwHaGy?w=214&h=195&c=7&r=0&o=7&cb=thfvnext&dpr=1.3&pid=1.7&rm=3"}
+            src={profileImage}
             onError={(e) => {
-              console.error('Image failed to load:', imageUrl);
-              e.target.src = "https://thfvnext.bing.com/th/id/OIP.PMhANanxddOBObcYxcYOcwHaGy?w=214&h=195&c=7&r=0&o=7&cb=thfvnext&dpr=1.3&pid=1.7&rm=3";
+              e.target.src = profileImage;
             }}
             alt="User profile"
           />
         </div>
       </div>
 
+      {/* Main Body */}
       <div className="bg-white rounded-b-lg shadow pt-16 sm:pt-20 px-6 pb-8">
+        {/* Profile Info */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <div className="space-y-1">
             <h1 className="text-2xl font-bold text-gray-900">{name}</h1>
@@ -142,11 +153,52 @@ function FullProfileView() {
           </section>
         )}
 
-        {/* Posts Placeholder */}
+        {/* Posts - LinkedIn Style */}
         <section className="mt-10 border-t pt-6">
-          <div className="mt-4 space-y-4 text-gray-500 italic">
-            No posts yet.
-          </div>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Posts</h2>
+          {posts.length === 0 ? (
+            <p className="text-gray-500 italic">No posts yet.</p>
+          ) : (
+            <div className="space-y-6">
+              {posts.map((post) => (
+                <div key={post._id} className="bg-white border border-gray-200 rounded-xl shadow p-5">
+                  {/* Post Header */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <img
+                      src={profileImage}
+                      alt="User"
+                      className="h-10 w-10 rounded-full object-cover"
+                    />
+                    <div>
+                      <p className="font-semibold text-gray-900">{name}</p>
+                      <p className="text-xs text-gray-500">{new Date(post.createdAt).toLocaleString()}</p>
+                    </div>
+                  </div>
+
+                  {/* Post Content */}
+                  <p className="text-gray-800 mb-3">{post.content}</p>
+
+                  {/* Post Stats */}
+                  <div className="text-sm text-gray-600 mb-2">
+                    {post.likes?.length || 0} Likes
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex justify-around border-t pt-2 text-sm text-gray-600">
+                    <button className="hover:text-blue-600 transition flex items-center gap-1">
+                      👍 Like
+                    </button>
+                    <button className="hover:text-blue-600 transition flex items-center gap-1">
+                      💬 Comment
+                    </button>
+                    <button className="hover:text-blue-600 transition flex items-center gap-1">
+                      ↗️ Share
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       </div>
     </div>
@@ -154,6 +206,3 @@ function FullProfileView() {
 }
 
 export default FullProfileView;
-
-
- 

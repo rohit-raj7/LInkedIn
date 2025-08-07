@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast'; // ✅ Added for toast notifications
-
+import { Toaster } from 'react-hot-toast';  
 import Navbar from './components/Navbar';
 import FullProfileView from './components/FullProfileView';
 import Profile from './components/Profile';
@@ -11,6 +10,7 @@ import Footer from './components/Footer';
 import ProfileFeedLayout from './components/ProfileFeedLayout';
 import SetupProfileForm from './components/SetupProfileForm';
 import AppProvider from './context/AppContext';
+import ProfilUi from './components/SkeletonLoadingUi/ProfilUi'
 
 const App = () => {
   const location = useLocation();
@@ -78,8 +78,8 @@ const App = () => {
             )
           }
         />
-      </Routes>
-
+      </Routes>  
+      <ProfilUi />
       {location.pathname !== '/feed' && <Footer />}
     </AppProvider>
   );

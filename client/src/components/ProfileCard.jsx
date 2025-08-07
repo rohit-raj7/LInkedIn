@@ -1,8 +1,7 @@
- 
-
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import ProfilUi from './SkeletonLoadingUi/ProfilUi';
 
 function Profile({ currentUser }) {
     const [user, setUser] = useState(null);
@@ -32,8 +31,6 @@ function Profile({ currentUser }) {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-
-                console.log("Fetched profile:", res.data);
                 setProfile(res.data);
             } catch (err) {
                 console.error("Error fetching profile:", err.message);
@@ -46,7 +43,7 @@ function Profile({ currentUser }) {
     }, [currentUser, paramUserId]);
 
     if (loading) {
-        return <div className="text-center mt-10 text-gray-600">Loading profile...</div>;
+        return <div><ProfilUi/></div>;
     }
 
     if (!profile) {
@@ -54,7 +51,8 @@ function Profile({ currentUser }) {
     }
 
     return (
-        <div className="w-full md:w-1/2 lg:w-1/3 mx-auto mt-10">
+
+        <div className="w-full md:w-1/2 lg:w-1/3 mx-auto mt-10 sticky top-20 h-fit">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                 {/* Header */}
                 <div className="h-24 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
@@ -79,7 +77,10 @@ function Profile({ currentUser }) {
                     <h2 className="text-xl font-bold text-gray-900 mt-2">{profile.name || "Unnamed"}</h2>
                     <p className="text-sm text-gray-600">{profile.title || "No title provided"}</p>
                     <p className="mt-3 text-gray-700 text-sm">{profile.about || "No bio available."}</p>
-                    <p className="mt-2 text-gray-500 text-sm"><span className='text-gray-600 text-sm'>Location: </span>{profile.location || "No location"}</p>
+                    <p className="mt-2 text-gray-500 text-sm">
+                        <span className='text-gray-600 text-sm'>Location: </span>
+                        {profile.location || "No location"}
+                    </p>
 
                     {/* Skills */}
                     {Array.isArray(profile.skills) && profile.skills.length > 0 && (
@@ -109,6 +110,8 @@ function Profile({ currentUser }) {
             </div>
         </div>
     );
+
+
 }
 
 export default Profile;

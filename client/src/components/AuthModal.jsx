@@ -1,12 +1,13 @@
  
 
-
-
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import SetupProfileForm from './SetupProfileForm';
+import { AppContext } from '../context/AppContext';
 
 function AuthModal({ isOpen, onClose }) {
+  const { setUser, fetchUser } = useContext(AppContext);  
+
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
@@ -15,9 +16,10 @@ function AuthModal({ isOpen, onClose }) {
   const [showProfileForm, setShowProfileForm] = useState(false);
   const [newUserId, setNewUserId] = useState(null);
 
+
   // const apiUrl = 'https://linkedinbackerd.vercel.app';
 
-    const apiUrl = 'http://localhost:3001';
+  const apiUrl = 'http://localhost:3001';
 
   if (!isOpen) return null;
 
@@ -37,8 +39,9 @@ function AuthModal({ isOpen, onClose }) {
           password: formData.password
         });
         localStorage.setItem('token', res.data.token);
-        localStorage.setItem('user', JSON.stringify(res.data.user));
+        localStorage.setItem('user', JSON.stringify(res.data.user)); 
         alert("Logged in successfully");
+        setUser(res.data.user);
         onClose();
         window.location.reload();
       } else {
@@ -49,9 +52,10 @@ function AuthModal({ isOpen, onClose }) {
         });
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('user', JSON.stringify(res.data.user));
-        setNewUserId(res.data.user._id); // Save new userId
+        setUser(res.data.user);
+        setNewUserId(res.data.user._id); 
         setShowProfileForm(true); // Show setup form
-        
+
       }
     } catch (err) {
       const msg = err.response?.data?.message || 'Something went wrong';
@@ -196,8 +200,5 @@ function AuthModal({ isOpen, onClose }) {
 }
 
 export default AuthModal;
-
-
-
 
  
