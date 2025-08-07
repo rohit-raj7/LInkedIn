@@ -53,7 +53,9 @@ function Profile({ currentUser }) {
 
     return (
 
-        <div className="w-full md:w-1/2 lg:w-1/3 mx-auto mt-10 sticky top-20 h-fit">
+        // <div className="w-full md:w-1/2 lg:w-1/3 mx-auto mt-10 sticky top-20 h-fit">
+        <div className="w-full md:w-1/2 lg:w-1/3 mx-auto mt-10 md:sticky md:top-20 h-fit">
+
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                 {/* Header */}
                 <div className="h-24 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
