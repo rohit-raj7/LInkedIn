@@ -31,7 +31,7 @@
 - View any user’s public profile  
 - See their **bio** , **list of posts** , **Comments**
 
-### Extra Features
+### ✨✨Extra Features
 
 - **Update** and **Delete** the posts.
 - Only the **author** of the post can **edit** or **delete** it.
