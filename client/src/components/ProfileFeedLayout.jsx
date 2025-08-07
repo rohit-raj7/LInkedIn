@@ -3,6 +3,7 @@ import React from 'react';
 import ProfileCard from './ProfileCard';
 import UserPost from './UserPost';
 import NetworkNews from './NetworkNews';
+import Post from './Post'
 
 const ProfileFeedLayout = () => {
     return (
@@ -13,6 +14,7 @@ const ProfileFeedLayout = () => {
 
                 {/* Middle Column (Feed) */}
                 <UserPost/>
+                <Post/>
 
                 {/* Right Column (Network & News) */}
                 <NetworkNews/>
@@ -21,4 +23,5 @@ const ProfileFeedLayout = () => {
     );
 };
 
-export default ProfileFeedLayout;
+export default ProfileFeedLayout;  
+ 

@@ -1,5 +1,7 @@
 
 import Post from "../models/Post.js";
+import Comment from "../models/Comment.js";
+
 
 export const createPost = async (req, res) => {
   const { content } = req.body;
