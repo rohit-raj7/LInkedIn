@@ -7,7 +7,8 @@ import FullProfile from './SkeletonLoadingUi/FullProfile'
 
 function FullProfileView() {
   const { userId } = useParams();
-  const apiUrl = 'http://localhost:3001';
+  // const apiUrl = 'http://localhost:3001';
+  const apiUrl = 'https://linkedinbackerd.vercel.app';
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -8,10 +8,10 @@ import ProfilUi from './SkeletonLoadingUi/ProfilUi'
 
 
 function Profile({ userId }) {
-  const [profile, setProfile] = useState(null);
-
-  // const apiUrl="https://linkedinbackerd.vercel.app"
-   const apiUrl="http://localhost:3001"
+  const [profile, setProfile] = useState(null); 
+  
+  const apiUrl="https://linkedinbackerd.vercel.app"
+  //  const apiUrl="http://localhost:3001"
   useEffect(() => {
     const fetchProfile = async () => {
       try {

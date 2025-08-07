@@ -17,9 +17,9 @@ function AuthModal({ isOpen, onClose }) {
   const [newUserId, setNewUserId] = useState(null);
 
 
-  // const apiUrl = 'https://linkedinbackerd.vercel.app';
+  const apiUrl = 'https://linkedinbackerd.vercel.app';
 
-  const apiUrl = 'http://localhost:3001';
+  // const apiUrl = 'http://localhost:3001';
 
   if (!isOpen) return null;
 

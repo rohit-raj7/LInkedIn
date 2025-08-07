@@ -4,7 +4,9 @@ import axios from 'axios';
 export const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
-  const apiUrl = 'http://localhost:3001';
+  // const apiUrl = 'http://localhost:3001';
+
+  const apiUrl = 'https://linkedinbackerd.vercel.app';
 
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);

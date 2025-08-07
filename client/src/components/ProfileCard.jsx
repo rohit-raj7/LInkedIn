@@ -7,7 +7,8 @@ function Profile({ currentUser }) {
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
-    const apiUrl = "http://localhost:3001";
+
+    const apiUrl = 'https://linkedinbackerd.vercel.app';
 
     const { userId: paramUserId } = useParams();
 

@@ -1,15 +1,12 @@
- 
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import AuthModal from './AuthModal';
-import { Link } from 'react-router-dom';
-
-
 
 function Navbar() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const location = useLocation();
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -31,6 +28,8 @@ function Navbar() {
     window.location.reload();
   };
 
+  const isActive = (path) => location.pathname === path;
+
   return (
     <>
       <nav className="bg-white border-b shadow-sm sticky top-0 z-50">
@@ -38,18 +37,55 @@ function Navbar() {
           <div className="flex justify-between items-center h-16">
             {/* Logo and Brand */}
             <Link to="/" className="flex items-center space-x-2">
-              
-               
               <span className="text-xl font-bold text-blue-700 tracking-wide">ConnectHub</span>
             </Link>
 
             {/* Navigation Links */}
             <div className="hidden md:flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium text-sm">Feed</Link>
-              <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium text-sm">Network</Link>
-              <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium text-sm">Jobs</Link>
-              <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium text-sm">Messages</Link>
-              <Link to="/setup-profile" className="text-gray-700 hover:text-blue-600 font-medium text-sm">Setup Profile</Link>
+              <Link
+                to="/"
+                className={`text-sm font-medium ${
+                  isActive('/') ? 'text-blue-600 underline underline-offset-8 decoration-2' : 'text-gray-700 hover:text-blue-600'
+                }`}
+              >
+                Feed
+              </Link>
+
+              <Link
+                to="/network"
+                className={`text-sm font-medium ${
+                  isActive('/network') ? 'text-blue-600 underline underline-offset-8 decoration-2' : 'text-gray-700 hover:text-blue-600'
+                }`}
+              >
+                Network
+              </Link>
+
+              <Link
+                to="/jobs"
+                className={`text-sm font-medium ${
+                  isActive('/jobs') ? 'text-blue-600 underline underline-offset-8 decoration-2' : 'text-gray-700 hover:text-blue-600'
+                }`}
+              >
+                Jobs
+              </Link>
+
+              <Link
+                to="/messages"
+                className={`text-sm font-medium ${
+                  isActive('/messages') ? 'text-blue-600 underline underline-offset-8 decoration-2' : 'text-gray-700 hover:text-blue-600'
+                }`}
+              >
+                Messages
+              </Link>
+
+              <Link
+                to="/setup-profile"
+                className={`text-sm font-medium ${
+                  isActive('/setup-profile') ? 'text-blue-600 underline underline-offset-8 decoration-2' : 'text-gray-700 hover:text-blue-600'
+                }`}
+              >
+                Setup Profile
+              </Link>
             </div>
 
             {/* User/Login Section */}
@@ -64,8 +100,8 @@ function Navbar() {
               ) : (
                 <div className="relative">
                   <button
-                    onClick={() => setIsDropdownOpen(prev => !prev)}
-                    className=" text-blue-600 font-medium hover:text-blue-500"
+                    onClick={() => setIsDropdownOpen((prev) => !prev)}
+                    className="text-blue-600 font-medium hover:text-blue-500"
                   >
                     {user.name || 'User'}
                   </button>
@@ -73,9 +109,8 @@ function Navbar() {
                   {isDropdownOpen && (
                     <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-xl z-20 animate-dropdown transition-all duration-200">
                       <div className="py-2">
-                        {/* Optional: Profile link */}
                         <Link
-                          to='/'
+                          to="/"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition rounded"
                         >
                           🧑‍💼 Profile
@@ -83,7 +118,6 @@ function Navbar() {
 
                         <hr className="my-1 border-gray-200" />
 
-                        {/* Logout */}
                         <button
                           onClick={handleLogout}
                           className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition rounded"
@@ -93,7 +127,6 @@ function Navbar() {
                       </div>
                     </div>
                   )}
-
                 </div>
               )}
             </div>

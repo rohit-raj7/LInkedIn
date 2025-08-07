@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 function SetupProfileForm({ onComplete }) {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const apiUrl = "http://localhost:3001";
+  const apiUrl = 'https://linkedinbackerd.vercel.app';
 
   const [formData, setFormData] = useState({
     name: '',
