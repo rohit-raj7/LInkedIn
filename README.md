@@ -23,10 +23,11 @@
 - Text-only post creation  
 - Displays all users’ posts in a **real-time feed**  
 - Shows **author name** and **timestamp**
+- User can **like** and **comment** on Other Post.
 
 ### 👤 Profile Page
 - View any user’s public profile  
-- See their **bio** and **list of posts**
+- See their **bio** , **list of posts** , **Comments**
 
 ---
 
