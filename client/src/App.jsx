@@ -10,7 +10,6 @@ import Footer from './components/Footer';
 import ProfileFeedLayout from './components/ProfileFeedLayout';
 import SetupProfileForm from './components/SetupProfileForm';
 import AppProvider from './context/AppContext';
-import ProfilUi from './components/SkeletonLoadingUi/ProfilUi'
 
 const App = () => {
   const location = useLocation();
@@ -78,8 +77,7 @@ const App = () => {
             )
           }
         />
-      </Routes>  
-      <ProfilUi />
+      </Routes>   
       {location.pathname !== '/feed' && <Footer />}
     </AppProvider>
   );

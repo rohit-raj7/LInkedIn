@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import FullProfile from './SkeletonLoadingUi/FullProfile'
 
 function FullProfileView() {
   const { userId } = useParams();
@@ -46,7 +47,9 @@ function FullProfileView() {
     fetchProfileWithPosts();
   }, [userId]);
 
-  if (loading) return <div className="text-center mt-10">Loading profile...</div>;
+  if (loading) return <div>
+    <FullProfile />
+  </div>;
   if (!profile) return <div className="text-center mt-10 text-red-500">Profile not found.</div>;
 
   const {
