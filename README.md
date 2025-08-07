@@ -31,13 +31,18 @@
 - View any user’s public profile  
 - See their **bio** , **list of posts** , **Comments**
 
----
-
 ### Extra Features
 
+- **Update** and **Delete** the posts.
 - User can **like** and **comment** on Other Post.
-- Post **Editing** & **Deletion**
+- **Deletion** is secure and includes proper **authorization** checks.
+- Users can **update** the content in-place, similar to LinkedIn’s inline editing.
 - Profile Picture Upload
+- 🔄 Edit & Delete Posts
+- Only the **author** of the post can **edit** or **delete** it.
+
+
+---
 
 
 ## 🛠️ Tech Stack
