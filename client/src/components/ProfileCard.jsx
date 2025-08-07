@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import ProfilUi from './SkeletonLoadingUi/ProfilUi';
+import DummyProfile from './SkeletonLoadingUi/DummyProfile';
 
 function Profile({ currentUser }) {
     const [user, setUser] = useState(null);
@@ -48,7 +49,7 @@ function Profile({ currentUser }) {
     }
 
     if (!profile) {
-        return <div className="text-center mt-10 text-red-600">Profile not found.</div>;
+        return <DummyProfile />;
     }
 
     return (
