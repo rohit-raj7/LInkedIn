@@ -10,6 +10,8 @@ import Footer from './components/Footer';
 import ProfileFeedLayout from './components/ProfileFeedLayout';
 import SetupProfileForm from './components/SetupProfileForm';
 import AppProvider from './context/AppContext';
+import Network from './components/DummyFile/Network'
+import Jobs from './components/DummyFile/Job'
 
 const App = () => {
   const location = useLocation();
@@ -67,6 +69,8 @@ const App = () => {
           }
         />
         <Route path="/profile/:userId" element={<FullProfileView />} />
+        <Route path="/network" element={<Network />} />
+        <Route path="/jobs" element={<Jobs />} />
         <Route
           path="/"
           element={
