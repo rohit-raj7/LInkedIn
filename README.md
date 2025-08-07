@@ -10,6 +10,8 @@
 - 🔗 **Frontend**: [https://minilinkedin-flame.vercel.app/](https://minilinkedin-flame.vercel.app/) 
 - 🔗 **Backend**: [https://linkedinbackerd.vercel.app/](https://linkedinbackerd.vercel.app/)
 
+- 🔗 **Video**: [https://youtu.be/BgScljC5Z6o?si=RAfL_5L063CXD7tK/](https://youtu.be/BgScljC5Z6o?si=RAfL_5L063CXD7tK/)
+
 ---
 
 ## ✨ Features
@@ -30,6 +32,13 @@
 - See their **bio** , **list of posts** , **Comments**
 
 ---
+
+### Extra Features
+
+- User can **like** and **comment** on Other Post.
+- Post **Editing** & **Deletion**
+- Profile Picture Upload
+
 
 ## 🛠️ Tech Stack
 
