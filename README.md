@@ -53,3 +53,11 @@ git clone https://github.com/your-username/connecthub.git
 cd client
 npm install
 npm run dev
+```
+
+#### 🔷 Backend
+
+```bash 
+cd server
+npm install
+npm run dev
