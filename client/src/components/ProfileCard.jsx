@@ -1,143 +1,111 @@
+ 
 
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
 
-// import React from 'react';
-// import { Link } from 'react-router-dom';
+function Profile({ currentUser }) {
+    const [user, setUser] = useState(null);
+    const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const apiUrl = "http://localhost:3001";
 
-// function ProfileCard() {
-//     return (
-//         <>
-//             {/* Sidebar Profile Card */}
-//             <div className="w-full md:w-1/3 lg:w-1/4">
-//                 <div className="bg-white rounded-lg shadow overflow-hidden">
-//                     <div className="profile-banner"></div>
-//                     <div className="px-4 pb-6 relative -mt-12">
-//                         <div className="flex justify-center">
-//                             <img className="h-24 w-24 rounded-full border-4 border-white" src="https://placehold.co/400x400" alt="User headshot" />
-//                         </div>
-//                         <div className="text-center mt-4">
-//                             <h2 className="text-lg font-semibold text-gray-900" id="profile-name">Sarah Johnson</h2>
-//                             <p className="text-sm text-gray-500" id="profile-title">Senior UX Designer at TechCorp</p>
-//                         </div>
-//                         <div className="mt-4 text-sm text-gray-700" id="profile-bio">
-//                             Experienced UX designer passionate about creating intuitive digital experiences. Previously at DesignWorks Inc.
-//                         </div>
-//                         <div className="mt-4 border-t border-gray-200 pt-4">
-//                             <h3 className="text-sm font-medium text-gray-500">Connections</h3>
-//                             <p className="text-sm font-semibold text-blue-600 mt-1">500+ connections</p>
-//                             {/* Full Profile View */}
-//                             <Link to="/profile" className="text-sm text-blue-600 hover:underline mt-4 block text-center">
-//                                 View Full Profile
-//                             </Link>
-//                         </div>
-//                     </div>
-//                 </div>
+    const { userId: paramUserId } = useParams();
 
-//                 {/* Suggestions */}
-//                 <div className="bg-white rounded-lg shadow mt-4 p-4">
-//                     <h3 className="text-sm font-medium text-gray-900 mb-2">Suggestions for You</h3>
-//                     <div className="space-y-3">
-//                         {[
-//                             { name: "Michael Brown", title: "Project Manager at BuildRight" },
-//                             { name: "Alex Chen", title: "Software Developer at CodeForge" },
-//                             { name: "Emily Rodriguez", title: "Marketing Specialist at BrandWorks" }
-//                         ].map((person, index) => (
-//                             <div className="flex items-center gap-3" key={index}>
-//                                 <img className="h-10 w-10 rounded-full" src="https://placehold.co/400x400" alt={`${person.name} profile`} />
-//                                 <div className="flex-1 min-w-0">
-//                                     <p className="text-sm font-medium text-gray-900 truncate">{person.name}</p>
-//                                     <p className="text-sm text-gray-500 truncate">{person.title}</p>
-//                                 </div>
-//                                 <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">Connect</button>
-//                             </div>
-//                         ))}
-//                     </div>
-//                     <button className="w-full mt-4 text-sm text-gray-500 hover:text-gray-700 font-medium">See all</button>
-//                 </div>
-//             </div>
+    useEffect(() => {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        const token = localStorage.getItem("token");
+        const userId = paramUserId || currentUser?.userId || storedUser?.userId;
 
+        if (!userId) {
+            console.error("User ID is missing.");
+            setLoading(false);
+            return;
+        }
 
-//         </>
-//     );
-// }
+        setUser(storedUser || currentUser);
 
-// export default ProfileCard;
+        const fetchProfile = async () => {
+            try {
+                const res = await axios.get(`${apiUrl}/api/profile/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
+                console.log("Fetched profile:", res.data);
+                setProfile(res.data);
+            } catch (err) {
+                console.error("Error fetching profile:", err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
 
+        fetchProfile();
+    }, [currentUser, paramUserId]);
 
+    if (loading) {
+        return <div className="text-center mt-10 text-gray-600">Loading profile...</div>;
+    }
 
+    if (!profile) {
+        return <div className="text-center mt-10 text-red-600">Profile not found.</div>;
+    }
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-
-function Profile() {
     return (
-        <div className="w-full md:w-1/3 lg:w-1/4">
-            {/* Profile Card */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden relative">
-                {/* Banner */}
-                <div className="h-28 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+        <div className="w-full md:w-1/2 lg:w-1/3 mx-auto mt-10">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                {/* Header */}
+                <div className="h-24 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
 
                 {/* Profile Image */}
-                <div className="flex justify-center -mt-14">
+                <div className="flex justify-center -mt-12">
                     <img
-                        className="h-28 w-28 rounded-full border-4 border-white object-cover shadow-md"
-                        src="https://placehold.co/400x400"
-                        alt="User headshot"
+                        src={profile.imageUrl && profile.imageUrl.trim() !== ""
+                            ? profile.imageUrl
+                            : "https://th.bing.com/th/id/OIP.PMhANanxddOBObcYxcYOcwHaGy"}
+                        alt="Profile"
+                        className="h-24 w-24 rounded-full border-4 border-white object-cover"
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://th.bing.com/th/id/OIP.PMhANanxddOBObcYxcYOcwHaGy";
+                        }}
                     />
                 </div>
 
-                {/* Profile Info */}
-                <div className="px-6 pb-6 pt-2 text-center">
-                    <h2 className="text-xl font-bold text-gray-900" id="profile-name">Sarah Johnson</h2>
-                    <p className="text-sm text-gray-600 mt-1" id="profile-title">Senior UX Designer at TechCorp</p>
+                {/* User Info */}
+                <div className="text-center px-6 pb-6">
+                    <h2 className="text-xl font-bold text-gray-900 mt-2">{profile.name || "Unnamed"}</h2>
+                    <p className="text-sm text-gray-600">{profile.title || "No title provided"}</p>
+                    <p className="mt-3 text-gray-700 text-sm">{profile.about || "No bio available."}</p>
+                    <p className="mt-2 text-gray-500 text-sm"><span className='text-gray-600 text-sm'>Location: </span>{profile.location || "No location"}</p>
 
-                    <p className="mt-4 text-sm text-gray-700" id="profile-bio">
-                        Experienced UX designer passionate about creating intuitive digital experiences. Previously at DesignWorks Inc.
-                    </p>
-
-                    <div className="mt-4 border-t pt-4">
-                        <h3 className="text-xs font-semibold text-gray-400">Connections</h3>
-                        <p className="text-sm font-semibold text-blue-600 mt-1">500+ connections</p>
-
-                        {/* View Full Profile */}
-                        <Link
-                            to="/profile"
-                            className="inline-block mt-4 text-sm text-white bg-blue-600 px-4 py-1.5 rounded hover:bg-blue-700 transition"
-                        >
-                            View Full Profile
-                        </Link>
-                    </div>
-                </div>
-            </div>
-
-            {/* Suggestions Card */}
-            <div className="bg-white rounded-xl shadow-lg mt-6 p-5">
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">Suggestions for You</h3>
-
-                <div className="space-y-4">
-                    {[
-                        { name: "Michael Brown", title: "Project Manager at BuildRight" },
-                        { name: "Alex Chen", title: "Software Developer at CodeForge" },
-                        { name: "Emily Rodriguez", title: "Marketing Specialist at BrandWorks" }
-                    ].map((person, index) => (
-                        <div className="flex items-center gap-3" key={index}>
-                            <img
-                                className="h-10 w-10 rounded-full object-cover"
-                                src="https://placehold.co/400x400"
-                                alt={`${person.name} profile`}
-                            />
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900 truncate">{person.name}</p>
-                                <p className="text-sm text-gray-500 truncate">{person.title}</p>
-                            </div>
-                            <button className="text-blue-600 hover:underline text-sm font-medium">Connect</button>
+                    {/* Skills */}
+                    {Array.isArray(profile.skills) && profile.skills.length > 0 && (
+                        <div className="mt-4">
+                            <h3 className="text-xs font-semibold text-gray-400 mb-1">Skills:</h3>
+                            <ul className="flex flex-wrap gap-2 justify-center">
+                                {profile.skills.map((skill, index) => (
+                                    <li
+                                        key={index}
+                                        className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full"
+                                    >
+                                        {skill}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                    ))}
-                </div>
+                    )}
 
-                <button className="w-full mt-4 text-sm text-gray-500 hover:text-gray-700 font-semibold">
-                    See all
-                </button>
+                    {/* Link to full profile */}
+                    <Link
+                        to={`/profile/${profile.userCustomId || paramUserId}`}
+                        className="inline-block mt-4 text-sm text-white bg-blue-600 px-4 py-1.5 rounded hover:bg-blue-700"
+                    >
+                        View Full Profile
+                    </Link>
+                </div>
             </div>
         </div>
     );

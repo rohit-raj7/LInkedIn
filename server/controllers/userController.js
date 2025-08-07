@@ -1,15 +1,25 @@
+// controllers/userController.js
 import User from "../models/User.js";
 import Post from "../models/Post.js";
+import Profile from "../models/Profile.js";
 
 export const getUserProfile = async (req, res) => {
   try {
+    const { userId } = req.user; // custom userId string like 'user_123abc'
 
-     const user = req.user;
-    // const user = await User.findById(req.params.id).select("-password");
+    const user = await User.findOne({ userId });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
     const posts = await Post.find({ author: user._id }).sort({ createdAt: -1 });
-    res.json({ user, posts });
+    const profile = await Profile.findOne({ userCustomId: userId });
+
+    res.json({ user: {
+      userId: user.userId,
+      name: user.name,
+      email: user.email
+    }, profile, posts });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 };
- 

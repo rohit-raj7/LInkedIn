@@ -5,22 +5,21 @@ const userSchema = new mongoose.Schema({
   userId: {
     type: String,
     unique: true,
-    required: true
+    required: true, // Custom userId (e.g., from auth)
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
-const User = mongoose.model('User', userSchema);
-export default User;
+export default mongoose.model('User', userSchema);

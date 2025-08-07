@@ -1,63 +1,87 @@
+ 
+
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom'; // ✅ Added useLocation
-import Navbar from './components/Navbar'; 
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast'; // ✅ Added for toast notifications
+
+import Navbar from './components/Navbar';
 import FullProfileView from './components/FullProfileView';
 import Profile from './components/Profile';
 import Footer from './components/Footer';
 import ProfileFeedLayout from './components/ProfileFeedLayout';
+import SetupProfileForm from './components/SetupProfileForm';
+import AppProvider from './context/AppContext';
 
 const App = () => {
-  const location = useLocation(); // ✅ Hook to access current path
-  const [currentUser, setCurrentUser] = useState(null);
+  const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [isProfileSetup, setIsProfileSetup] = useState(false);
+  const [loadingUser, setLoadingUser] = useState(true);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('currentUser');
+    const savedUser = localStorage.getItem('user');
     if (savedUser) {
-      setCurrentUser(JSON.parse(savedUser));
-      setIsAuthenticated(true);
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        setCurrentUser(parsedUser);
+        setIsAuthenticated(true);
+      } catch (err) {
+        console.error('Failed to parse user:', err);
+        localStorage.removeItem('user');
+      }
     }
-
-    setPosts([
-      {
-        id: 1,
-        userId: 1,
-        author: 'Emma Wilson',
-        content: 'Just launched our new product feature...',
-        time: '2h ago',
-      },
-      {
-        id: 2,
-        userId: 2,
-        author: 'David Kim',
-        content: "Interesting insights from today's engineering leadership conference...",
-        time: 'Yesterday',
-      },
-    ]);
+    setLoadingUser(false);
   }, []);
 
+  const handleProfileSetupComplete = () => {
+    setIsProfileSetup(true);
+  };
+
+  if (loadingUser) return <div className="text-center mt-10">Loading...</div>;
+
   return (
-    <div className="min-h-screen bg-gray-100">
+    <AppProvider>
+      {/* ✅ Toast container for popup messages */}
+      <Toaster position="top-center" reverseOrder={false} />
+
       <Navbar
+        isAuthenticated={isAuthenticated}
+        setIsAuthenticated={setIsAuthenticated}
         currentUser={currentUser}
         setCurrentUser={setCurrentUser}
-        setIsAuthenticated={setIsAuthenticated}
       />
 
       <Routes>
         <Route
-          path="/"
-          element={<Profile currentUser={currentUser} posts={posts} />}
+          path="/setup-profile"
+          element={
+            currentUser ? (
+              <SetupProfileForm
+                userId={currentUser.userId}
+                onComplete={handleProfileSetupComplete}
+              />
+            ) : (
+              <div className="text-center mt-10">Please log in first.</div>
+            )
+          }
         />
-        <Route path="/profile" element={<FullProfileView />} />
+        <Route path="/profile/:userId" element={<FullProfileView />} />
+        <Route
+          path="/"
+          element={
+            isAuthenticated && isProfileSetup ? (
+              <Profile currentUser={currentUser} posts={posts} />
+            ) : (
+              <ProfileFeedLayout />
+            )
+          }
+        />
       </Routes>
 
-      {/* ✅ Conditionally render ProfileFeedLayout */}
-      {location.pathname !== '/profile' && <ProfileFeedLayout />}
-
-      <Footer />
-    </div>
+      {location.pathname !== '/feed' && <Footer />}
+    </AppProvider>
   );
 };
 
